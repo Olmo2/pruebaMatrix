@@ -15,81 +15,72 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import com.olmo.Matrix.MatrixCampus.Beans.ObjEntrada;
-import com.olmo.Matrix.MatrixCampus.Beans.ObjSalida;
-import com.olmo.Matrix.MatrixCampus.Service.Services;
+import com.olmo.Matrix.MatrixCampus.service.PriceService;
+import com.olmo.Matrix.MatrixCampus.service.RequestDTO;
+import com.olmo.Matrix.MatrixCampus.service.ResponseDTO;
 
 @SpringBootTest
 @ExtendWith(MockitoExtension.class)
 class MatrixCampusApplicationTests {
 
 	@Mock
-	ObjSalida salida, salida2;
+	ResponseDTO responseDTO, responseDTO1;
 
 	@Mock
-	ObjEntrada mockEntrada;
+	RequestDTO requestDTO;
 
 	@Mock
-	List<ObjSalida> mockSalidaTest;
-
+	List<ResponseDTO> listResponseDTO,response;
+	
 	@Mock
-	List<ObjSalida> lista;
+	LocalDateTime date,startDate,endDate,startDate1,endDate1;
 
 	@Autowired
-	Services service;
+	PriceService priceService;
 
 	/**
 	 * Test 1: petición a las 10:00 del día 14 del producto 35455 para la brand 1
 	 * (ZARA)
 	 */
 	@Test
-	public void test1() {
-		// Declaraciones
-		salida = new ObjSalida();
-		salida2 = new ObjSalida();
-		mockSalidaTest = new ArrayList<ObjSalida>();
-		mockEntrada = new ObjEntrada();
-
-		// Mock entrada
-		LocalDateTime fecha = LocalDateTime.parse("2020-06-16T09:00:00",
-				DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-		mockEntrada.setFechaInicio(fecha);
-		mockEntrada.setIdProducto(35455);
-		mockEntrada.setIdCadena(1);
-
-		// Mock salida
-		salida.setIdProducto(35455);
-		salida.setIdCadena(1);
-		salida.setTarifa(null);
-		salida.setPrecioFinal(38.95f);
-		salida.setCurr("EUR");
-		LocalDateTime fechaInicio = LocalDateTime.parse("2020-06-15T16:00:00",
-				DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-		LocalDateTime fechaFin = LocalDateTime.parse("2020-12-31T23:59:59",
-				DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-		salida.setFechaInicioAplicacion(fechaInicio);
-		salida.setFechaFinAplicacion(fechaFin);
-		mockSalidaTest.add(salida);
-
-		salida2.setIdProducto(35455);
-		salida2.setIdCadena(1);
-		salida2.setTarifa(null);
-		salida2.setPrecioFinal(35.5f);
-		salida2.setCurr("EUR");
-		LocalDateTime fechaInicio2 = LocalDateTime.parse("2020-06-14T00:00:00",
-				DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-		LocalDateTime fechaFin2 = LocalDateTime.parse("2020-12-31T23:59:59",
-				DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-		salida2.setFechaInicioAplicacion(fechaInicio2);
-		salida2.setFechaFinAplicacion(fechaFin2);
-		mockSalidaTest.add(salida2);
-
-		// Llamada al servicio
-		lista = service.getPrices(mockEntrada);
-
-		// Comprobaciones
-		assertFalse(lista.isEmpty());
-		assertEquals(lista, mockSalidaTest);
+	public void test20200614100000Brand1Product35455() {
+		requestDTO = new RequestDTO();
+		date = LocalDateTime.parse("2020-06-16T09:00:00",DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+		requestDTO.setStartDate(date);
+		requestDTO.setProductId(35455);
+		requestDTO.setBrandId(1);
+				
+		responseDTO = new ResponseDTO();
+		responseDTO.setProductId(35455);
+		responseDTO.setBrandId(1);
+		responseDTO.setRate(null);
+		responseDTO.setFinalPrice(38.95f);
+		responseDTO.setCurr("EUR");
+		startDate = LocalDateTime.parse("2020-06-15T16:00:00",DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+		endDate = LocalDateTime.parse("2020-12-31T23:59:59",DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+		responseDTO.setStartDate(startDate);
+		responseDTO.setEndDate(endDate);
+		
+		listResponseDTO = new ArrayList<ResponseDTO>();
+		listResponseDTO.add(responseDTO);
+		
+		responseDTO1 = new ResponseDTO();
+		responseDTO1.setProductId(35455);
+		responseDTO1.setBrandId(1);
+		responseDTO1.setRate(null);
+		responseDTO1.setFinalPrice(35.5f);
+		responseDTO1.setCurr("EUR");
+		startDate1 = LocalDateTime.parse("2020-06-14T00:00:00",DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+		endDate1 = LocalDateTime.parse("2020-12-31T23:59:59",DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+		responseDTO1.setStartDate(startDate1);
+		responseDTO1.setEndDate(endDate1);
+		
+		listResponseDTO.add(responseDTO1);
+		
+		response = priceService.getPrices(requestDTO);
+		
+		assertFalse(response.isEmpty());
+		assertEquals(response, listResponseDTO);
 	}
 
 	/**
@@ -97,53 +88,45 @@ class MatrixCampusApplicationTests {
 	 * (ZARA)
 	 */
 	@Test
-	public void test2() {
-		// Declaraciones
-		salida = new ObjSalida();
-		salida2 = new ObjSalida();
-		mockSalidaTest = new ArrayList<ObjSalida>();
-		mockEntrada = new ObjEntrada();
+	public void test20200614160000Brand1Product35455() {
+		
+		requestDTO = new RequestDTO();
+		date = LocalDateTime.parse("2020-06-14T16:00:00",DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+		requestDTO.setStartDate(date);
+		requestDTO.setProductId(35455);
+		requestDTO.setBrandId(1);
 
-		// Mock entrada
-		LocalDateTime fecha = LocalDateTime.parse("2020-06-14T16:00:00",
-				DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-		mockEntrada.setFechaInicio(fecha);
-		mockEntrada.setIdProducto(35455);
-		mockEntrada.setIdCadena(1);
+		responseDTO = new ResponseDTO();
+		responseDTO.setProductId(35455);
+		responseDTO.setBrandId(1);
+		responseDTO.setRate(null);
+		responseDTO.setFinalPrice(25.45f);
+		responseDTO.setCurr("EUR");
+		startDate = LocalDateTime.parse("2020-06-14T15:00:00",DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+		endDate = LocalDateTime.parse("2020-06-14T18:30:00",DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+		responseDTO.setStartDate(startDate);
+		responseDTO.setEndDate(endDate);
+		
+		listResponseDTO = new ArrayList<ResponseDTO>();
+		listResponseDTO.add(responseDTO);
+		
+		responseDTO1 = new ResponseDTO();
+		responseDTO1.setProductId(35455);
+		responseDTO1.setBrandId(1);
+		responseDTO1.setRate(null);
+		responseDTO1.setFinalPrice(35.5f);
+		responseDTO1.setCurr("EUR");
+		startDate1 = LocalDateTime.parse("2020-06-14T00:00:00",DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+		endDate1 = LocalDateTime.parse("2020-12-31T23:59:59",DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+		responseDTO1.setStartDate(startDate1);
+		responseDTO1.setEndDate(endDate1);
+		
+		listResponseDTO.add(responseDTO1);
 
-		// Mock salida
-		salida.setIdProducto(35455);
-		salida.setIdCadena(1);
-		salida.setTarifa(null);
-		salida.setPrecioFinal(25.45f);
-		salida.setCurr("EUR");
-		LocalDateTime fechaInicio = LocalDateTime.parse("2020-06-14T15:00:00",
-				DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-		LocalDateTime fechaFin = LocalDateTime.parse("2020-06-14T18:30:00",
-				DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-		salida.setFechaInicioAplicacion(fechaInicio);
-		salida.setFechaFinAplicacion(fechaFin);
-		mockSalidaTest.add(salida);
+		response = priceService.getPrices(requestDTO);
 
-		salida2.setIdProducto(35455);
-		salida2.setIdCadena(1);
-		salida2.setTarifa(null);
-		salida2.setPrecioFinal(35.5f);
-		salida2.setCurr("EUR");
-		LocalDateTime fechaInicio2 = LocalDateTime.parse("2020-06-14T00:00:00",
-				DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-		LocalDateTime fechaFin2 = LocalDateTime.parse("2020-12-31T23:59:59",
-				DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-		salida2.setFechaInicioAplicacion(fechaInicio2);
-		salida2.setFechaFinAplicacion(fechaFin2);
-		mockSalidaTest.add(salida2);
-
-		// Llamada al servicio
-		List<ObjSalida> lista = service.getPrices(mockEntrada);
-
-		// Comprobaciones
-		assertFalse(lista.isEmpty());
-		assertEquals(lista, mockSalidaTest);
+		assertFalse(response.isEmpty());
+		assertEquals(response, listResponseDTO);
 	}
 
 	/**
@@ -151,40 +134,31 @@ class MatrixCampusApplicationTests {
 	 * (ZARA)
 	 */
 	@Test
-	public void test3() {
-		// Declaraciones
-		salida = new ObjSalida();
-		salida2 = new ObjSalida();
-		mockSalidaTest = new ArrayList<ObjSalida>();
-		mockEntrada = new ObjEntrada();
+	public void test20200614210000Brand1Product35455() {
+		requestDTO = new RequestDTO();
+		date = LocalDateTime.parse("2020-06-14T21:00:00",	DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+		requestDTO.setStartDate(date);
+		requestDTO.setProductId(35455);
+		requestDTO.setBrandId(1);
 
-		// Mock entrada
-		LocalDateTime fecha = LocalDateTime.parse("2020-06-14T21:00:00",
-				DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-		mockEntrada.setFechaInicio(fecha);
-		mockEntrada.setIdProducto(35455);
-		mockEntrada.setIdCadena(1);
+		responseDTO = new ResponseDTO();
+		responseDTO.setProductId(35455);
+		responseDTO.setBrandId(1);
+		responseDTO.setRate(null);
+		responseDTO.setFinalPrice(35.5f);
+		responseDTO.setCurr("EUR");
+		startDate = LocalDateTime.parse("2020-06-14T00:00:00",DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+		endDate = LocalDateTime.parse("2020-12-31T23:59:59",DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+		responseDTO.setStartDate(startDate);
+		responseDTO.setEndDate(endDate);
+		
+		listResponseDTO = new ArrayList<ResponseDTO>();
+		listResponseDTO.add(responseDTO);
 
-		// Mock salida
-		salida.setIdProducto(35455);
-		salida.setIdCadena(1);
-		salida.setTarifa(null);
-		salida.setPrecioFinal(35.5f);
-		salida.setCurr("EUR");
-		LocalDateTime fechaInicio = LocalDateTime.parse("2020-06-14T00:00:00",
-				DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-		LocalDateTime fechaFin = LocalDateTime.parse("2020-12-31T23:59:59",
-				DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-		salida.setFechaInicioAplicacion(fechaInicio);
-		salida.setFechaFinAplicacion(fechaFin);
-		mockSalidaTest.add(salida);
+		response = priceService.getPrices(requestDTO);
 
-		// Llamada al servicio
-		List<ObjSalida> lista = service.getPrices(mockEntrada);
-
-		// Comprobaciones
-		assertFalse(lista.isEmpty());
-		assertEquals(lista, mockSalidaTest);
+		assertFalse(response.isEmpty());
+		assertEquals(response, listResponseDTO);
 	}
 
 	/**
@@ -192,51 +166,43 @@ class MatrixCampusApplicationTests {
 	 * (ZARA)
 	 */
 	@Test
-	public void test4() {
-		// Declaraciones
-		salida = new ObjSalida();
-		salida2 = new ObjSalida();
-		mockSalidaTest = new ArrayList<ObjSalida>();
-		mockEntrada = new ObjEntrada();
+	public void test20200615100000Brand1Product35455() {
+		requestDTO = new RequestDTO();
+		date = LocalDateTime.parse("2020-06-15T10:00:00",DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+		requestDTO.setStartDate(date);
+		requestDTO.setProductId(35455);
+		requestDTO.setBrandId(1);
 
-		// Mock entrada
-		LocalDateTime fecha = LocalDateTime.parse("2020-06-15T10:00:00",
-				DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-		mockEntrada.setFechaInicio(fecha);
-		mockEntrada.setIdProducto(35455);
-		mockEntrada.setIdCadena(1);
+		responseDTO = new ResponseDTO();
+		responseDTO.setProductId(35455);
+		responseDTO.setBrandId(1);
+		responseDTO.setRate(null);
+		responseDTO.setFinalPrice(30.5f);
+		responseDTO.setCurr("EUR");
+		LocalDateTime fechaInicio = LocalDateTime.parse("2020-06-15T00:00:00",DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+		LocalDateTime fechaFin = LocalDateTime.parse("2020-06-15T11:00:00",	DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+		responseDTO.setStartDate(fechaInicio);
+		responseDTO.setEndDate(fechaFin);
 
-		// Mock salida
-		salida.setIdProducto(35455);
-		salida.setIdCadena(1);
-		salida.setTarifa(null);
-		salida.setPrecioFinal(30.5f);
-		salida.setCurr("EUR");
-		LocalDateTime fechaInicio = LocalDateTime.parse("2020-06-15T00:00:00",
-				DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-		LocalDateTime fechaFin = LocalDateTime.parse("2020-06-15T11:00:00",
-				DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-		salida.setFechaInicioAplicacion(fechaInicio);
-		salida.setFechaFinAplicacion(fechaFin);
-		mockSalidaTest.add(salida);
+		listResponseDTO = new ArrayList<ResponseDTO>();
+		listResponseDTO.add(responseDTO);
 
-		salida2.setIdProducto(35455);
-		salida2.setIdCadena(1);
-		salida2.setTarifa(null);
-		salida2.setPrecioFinal(35.5f);
-		salida2.setCurr("EUR");
-		LocalDateTime fechaInicio2 = LocalDateTime.parse("2020-06-14T00:00:00");
-		LocalDateTime fechaFin2 = LocalDateTime.parse("2020-12-31T23:59:59");
-		salida2.setFechaInicioAplicacion(fechaInicio2);
-		salida2.setFechaFinAplicacion(fechaFin2);
-		mockSalidaTest.add(salida2);
+		responseDTO1 = new ResponseDTO();
+		responseDTO1.setProductId(35455);
+		responseDTO1.setBrandId(1);
+		responseDTO1.setRate(null);
+		responseDTO1.setFinalPrice(35.5f);
+		responseDTO1.setCurr("EUR");
+		startDate1 = LocalDateTime.parse("2020-06-14T00:00:00");
+		endDate1 = LocalDateTime.parse("2020-12-31T23:59:59");
+		responseDTO1.setStartDate(startDate1);
+		responseDTO1.setEndDate(endDate1);
+		listResponseDTO.add(responseDTO1);
 
-		// Llamada al servicio
-		List<ObjSalida> lista = service.getPrices(mockEntrada);
+		response = priceService.getPrices(requestDTO);
 
-		// Comprobaciones
-		assertFalse(lista.isEmpty());
-		assertEquals(lista, mockSalidaTest);
+		assertFalse(response.isEmpty());
+		assertEquals(response, listResponseDTO);
 	}
 
 	/**
@@ -244,53 +210,43 @@ class MatrixCampusApplicationTests {
 	 * (ZARA)
 	 */
 	@Test
-	public void test5() {
-		// Declaraciones
-		salida = new ObjSalida();
-		salida2 = new ObjSalida();
-		mockSalidaTest = new ArrayList<ObjSalida>();
-		mockEntrada = new ObjEntrada();
+	public void test20200616210000Brand1Product35455() {
+		requestDTO = new RequestDTO();
+		LocalDateTime fecha = LocalDateTime.parse("2020-06-16T21:00:00",DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+		requestDTO.setStartDate(fecha);
+		requestDTO.setProductId(35455);
+		requestDTO.setBrandId(1);
 
-		// Mock entrada
-		LocalDateTime fecha = LocalDateTime.parse("2020-06-16T21:00:00",
-				DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-		mockEntrada.setFechaInicio(fecha);
-		mockEntrada.setIdProducto(35455);
-		mockEntrada.setIdCadena(1);
+		responseDTO = new ResponseDTO();
+		responseDTO.setProductId(35455);
+		responseDTO.setBrandId(1);
+		responseDTO.setRate(null);
+		responseDTO.setFinalPrice(38.95f);
+		responseDTO.setCurr("EUR");
+		startDate = LocalDateTime.parse("2020-06-15T16:00:00",DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+		endDate = LocalDateTime.parse("2020-12-31T23:59:59",DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+		responseDTO.setStartDate(startDate);
+		responseDTO.setEndDate(endDate);
 
-		// Mock salida
-		salida.setIdProducto(35455);
-		salida.setIdCadena(1);
-		salida.setTarifa(null);
-		salida.setPrecioFinal(38.95f);
-		salida.setCurr("EUR");
-		LocalDateTime fechaInicio = LocalDateTime.parse("2020-06-15T16:00:00",
-				DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-		LocalDateTime fechaFin = LocalDateTime.parse("2020-12-31T23:59:59",
-				DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-		salida.setFechaInicioAplicacion(fechaInicio);
-		salida.setFechaFinAplicacion(fechaFin);
-		mockSalidaTest.add(salida);
+		listResponseDTO = new ArrayList<ResponseDTO>();
+		listResponseDTO.add(responseDTO);
 
-		salida2.setIdProducto(35455);
-		salida2.setIdCadena(1);
-		salida2.setTarifa(null);
-		salida2.setPrecioFinal(35.5f);
-		salida2.setCurr("EUR");
-		LocalDateTime fechaInicio2 = LocalDateTime.parse("2020-06-14T00:00:00",
-				DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-		LocalDateTime fechaFin2 = LocalDateTime.parse("2020-12-31T23:59:59",
-				DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
-		salida2.setFechaInicioAplicacion(fechaInicio2);
-		salida2.setFechaFinAplicacion(fechaFin2);
-		mockSalidaTest.add(salida2);
+		responseDTO1 = new ResponseDTO();
+		responseDTO1.setProductId(35455);
+		responseDTO1.setBrandId(1);
+		responseDTO1.setRate(null);
+		responseDTO1.setFinalPrice(35.5f);
+		responseDTO1.setCurr("EUR");
+		startDate1 = LocalDateTime.parse("2020-06-14T00:00:00",DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+		endDate1 = LocalDateTime.parse("2020-12-31T23:59:59",DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+		responseDTO1.setStartDate(startDate1);
+		responseDTO1.setEndDate(endDate1);
+		listResponseDTO.add(responseDTO1);
 
-		// Llamada al servicio
-		List<ObjSalida> lista = service.getPrices(mockEntrada);
+		response = priceService.getPrices(requestDTO);
 
-		// Comprobaciones
-		assertFalse(lista.isEmpty());
-		assertEquals(lista, mockSalidaTest);
+		assertFalse(response.isEmpty());
+		assertEquals(response, listResponseDTO);
 	}
 
 }
