@@ -23,5 +23,11 @@ public class PriceRESTController {
 		return service.getPrices(requestDTO);
 
 	}
+	@GetMapping("/pricesPruebaSpecification")
+	public List<ResponseDTO> get(@RequestBody RequestDTO requestDTO) {
+
+		return service.getPricesSpecification(requestDTO);
+
+	}
 
 }
